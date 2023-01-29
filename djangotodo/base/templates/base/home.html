@@ -1,0 +1,18 @@
+<h1>Testing Testing 123!!!</h1>
+
+<form method="POST" action="/">
+    {%csrf_token%}
+    {{form.title}}
+    <input type="submit" name="Create Task" value="Add Task">
+</form>
+{% for task in tasks%}
+    <div>
+        {% if task.complete == True %}
+            <strike>{{task}}</strike>
+        {% else %}
+            <p>{{task}}</p>
+        {% endif %}
+        <a href="{% url 'update' task.id %}">Update</a>
+        <a href="{% url 'delete' task.id %}">Delete</a>
+    </div>
+{%endfor%}

@@ -1,21 +1,23 @@
 import './App.css';
-
+import React, {useState, useEffect, useRef} from 'react';
 function App() {
+
+  const [tasks,setTask] = useState([])
   return (
     <div className="App">
       <div className="form-wrapper">
-        {/* <form className='todo-form' onSubmit={handleSubmit}>
+        <form className='todo-form'>
           <input
             type='text'
             placeholder='Add a task'
-            value={input}
+            // value={input}
             name='text'
             className='todo-input'
-            onChange={viewChange}
-            ref={focusOnInput}
+            // onChange={viewChange}
+            // ref={focusOnInput}
           />
           <button className='todo-button'> Add Task</button>
-        </form> */}
+        </form>
       </div>
       <div className="list-wrapper">
 

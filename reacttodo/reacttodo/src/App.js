@@ -44,7 +44,7 @@ function App() {
     
     fetch('http://127.0.0.1:8000/task-list/')
     .then(response => response.json())
-    .then(data => setTasks({todoList:data}))
+    .then(data => setTasks(t=>t={...t,todoList:data}))
   }
 
   function handleChange(e){
@@ -62,38 +62,39 @@ function App() {
 
     const url = 'http://127.0.0.1:8000/task-create/'
 
-    // fetch(url,{
-    //   method:'POST',
-    //   headers:{
-    //     'Content-type' : 'application/json',
-    //     'X-CSRFToken' : csrftoken,
-    //   },
-    //   body:JSON.stringify(tasks.activeItem)
-    // }).then((response) => {
-    //   fetchTasks()
-    //   setTasks({
-    //     ...tasks,
-    //     activeItem:{id: null,
-    //       title: '',
-    //       completed: false,
-    //     },
-    //   })
-    // })
+    fetch(url,{
+      method:'POST',
+      headers:{
+        'Content-type' : 'application/json',
+        'X-CSRFToken' : csrftoken,
+      },
+      body:JSON.stringify(tasks.activeItem)
+    }).then((response) => {
+      fetchTasks()
+      setTasks({
+        ...tasks,
+        activeItem:{
+          id: null,
+          title: '',
+          completed: false,
+        },
+      })
+    }).catch((error) => console.log('Error',error))
   }
   return (
     <div className="App">
       <div className="form-wrapper">
-        <form className='todo-form'>
+        <form className='todo-form' onSubmit={handleSubmit}>
           <input
             type='text'
             placeholder='Add a task'
-            // value={input}
+            value={tasks.activeItem.title}
             name='text'
             className='todo-input'
             onChange={handleChange}
             ref={focusOnInput}
           />
-          <button className='todo-button' onSubmit={handleSubmit}> Add Task</button>
+          <button className='todo-button'> Add Task</button>
         </form>
       </div>
       <div className="list-wrapper">

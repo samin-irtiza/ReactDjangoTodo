@@ -1,7 +1,10 @@
 import './App.css';
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {SlClose} from "react-icons/sl"
-import {TiEdit} from "react-icons/ti"
+// import {SlClose} from "react-icons/sl"
+
+import {FiXCircle} from "react-icons/fi"
+import {FiEdit} from "react-icons/fi"
+import {FiCheckCircle} from "react-icons/fi"
 function App() {
 
   const [tasks,setTasks] = useState({
@@ -45,6 +48,7 @@ function App() {
     fetch('http://127.0.0.1:8000/task-list/')
     .then(response => response.json())
     .then(data => setTasks(t=>t={...t,todoList:data}))
+    // .then(()=>console.log(tasks.todoList))
   }
 
   function handleChange(e){
@@ -79,7 +83,36 @@ function App() {
           completed: false,
         },
       })
-    }).catch((error) => console.log('Error',error))
+    }).catch((error) => console.error('Error',error))
+  }
+  function EditRender(editprops){
+    const todo = editprops.todo
+    if (editprops.editing && todo.id===tasks.activeItem.id){
+        return (
+        <form className='edit-form' onSubmit={handleSubmit}>
+          <input
+            type='text'
+            value={todo.title}
+            name='text'
+            onChange = {handleChange}
+            />
+        </form>
+        )
+    }
+    return(
+        <div className='todo-text'>
+          {todo.title}
+        </div>
+    )
+
+  }
+
+  function StartEdit(item){
+    setTasks({
+      ...tasks,
+      activeItem:item,
+      editing: true,
+    })
   }
   return (
     <div className="App">
@@ -99,13 +132,13 @@ function App() {
       </div>
       <div className="list-wrapper">
           {tasks.todoList.map((todo,index) => (
-              <div className={todo.isComplete? 'todo-row complete' : 'todo-row'} key={index}>
-                <div className='todo-text' key={todo.id}>
-                  {todo.title}
-                </div>
+              <div className={todo.completed? 'todo-row complete' : 'todo-row'} key={index}>
+                <EditRender todo={todo} editing={tasks.editing}/>
                 <div className='icons'>
-                  <SlClose className='remove-icon'/>
-                  <TiEdit className='edit-icon'/>
+                  <FiXCircle className='remove-icon' color='red'/>
+                  {tasks.editing && todo.id=== tasks.activeItem.id
+                  ?<FiCheckCircle className='edit-icon' color='blue'/>
+                  :<FiEdit className='edit-icon' onClick={()=>StartEdit(todo)}/>}
                 </div>
               </div>
             ))

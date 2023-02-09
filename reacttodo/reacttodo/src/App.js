@@ -97,7 +97,7 @@ function App() {
         <form className='edit-form' onSubmit={handleSubmit}>
           <input
             type='text'
-            value={todo.title}
+            value={tasks.activeItem.title}
             name='text'
             onChange = {handleChange}
             autoFocus = {true}

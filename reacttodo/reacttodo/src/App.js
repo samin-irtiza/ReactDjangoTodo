@@ -64,7 +64,12 @@ function App() {
     
     const csrftoken = getCookie('csrftoken');
 
-    const url = 'http://127.0.0.1:8000/task-create/'
+    let url = 'http://127.0.0.1:8000/task-create/'
+
+    if (tasks.editing){
+      url = `http://127.0.0.1:8000/task-update/${tasks.activeItem.id}/`
+      setTasks({...tasks,editing:false})
+    }
 
     fetch(url,{
       method:'POST',
@@ -95,7 +100,8 @@ function App() {
             value={todo.title}
             name='text'
             onChange = {handleChange}
-            />
+            autoFocus = {true}
+          />
         </form>
         )
     }
@@ -137,8 +143,8 @@ function App() {
                 <div className='icons'>
                   <FiXCircle className='remove-icon' color='red'/>
                   {tasks.editing && todo.id=== tasks.activeItem.id
-                  ?<FiCheckCircle className='edit-icon' color='blue'/>
-                  :<FiEdit className='edit-icon' onClick={()=>StartEdit(todo)}/>}
+                  ?<FiCheckCircle className='edit-icon' color='blue' onClick={handleSubmit}/>
+                  :<FiEdit className='edit-icon' style={{color:'aqua'}} onClick={()=>StartEdit(todo)}/>}
                 </div>
               </div>
             ))

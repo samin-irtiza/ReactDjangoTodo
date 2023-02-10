@@ -1,6 +1,7 @@
 import './App.css';
-import React, {useState, useEffect, useRef, useCallback} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 // import {SlClose} from "react-icons/sl"
+import TextareaAutosize from 'react-textarea-autosize'
 
 import {FiXCircle} from "react-icons/fi"
 import {FiEdit} from "react-icons/fi"
@@ -90,17 +91,24 @@ function App() {
       })
     }).catch((error) => console.error('Error',error))
   }
+  
   function EditRender(editprops){
     const todo = editprops.todo
+    // const textAreaRef = useRef(null)
+    const caretPositionFix = (e) => {
+      e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+    }
     if (editprops.editing && todo.id===tasks.activeItem.id){
         return (
         <form className='edit-form' onSubmit={handleSubmit}>
-          <input
+          <TextareaAutosize
+            // ref={textAreaRef}
             type='text'
             value={tasks.activeItem.title}
             name='text'
             onChange = {handleChange}
             autoFocus = {true}
+            onFocus = {caretPositionFix}
           />
         </form>
         )
@@ -121,7 +129,7 @@ function App() {
     })
   }
   return (
-    <div className="App">
+    <div className="App todo-app">
       <div className="form-wrapper">
         <form className='todo-form' onSubmit={handleSubmit}>
           <input
@@ -143,8 +151,8 @@ function App() {
                 <div className='icons'>
                   <FiXCircle className='remove-icon' color='red'/>
                   {tasks.editing && todo.id=== tasks.activeItem.id
-                  ?<FiCheckCircle className='edit-icon' color='blue' onClick={handleSubmit}/>
-                  :<FiEdit className='edit-icon' style={{color:'aqua'}} onClick={()=>StartEdit(todo)}/>}
+                  ?<FiCheckCircle className='edit-icon' color='lime' onClick={handleSubmit}/>
+                  :<FiEdit className='edit-icon' color='aqua' onClick={()=>StartEdit(todo)}/>}
                 </div>
               </div>
             ))

@@ -95,6 +95,16 @@ function App() {
   function EditRender(editprops){
     const todo = editprops.todo
     // const textAreaRef = useRef(null)
+    const completeToggle = (e) =>{
+      tasks.todoList.map(t =>{
+        if (t.id===todo.id){
+          t.completed=!t.completed
+        }
+        return t
+      })
+      setTasks({...tasks})
+    }
+
     const caretPositionFix = (e) => {
       e.target.setSelectionRange(e.target.value.length, e.target.value.length);
     }
@@ -114,7 +124,7 @@ function App() {
         )
     }
     return(
-        <div className='todo-text'>
+        <div className='todo-text' onClick={completeToggle}>
           {todo.title}
         </div>
     )
@@ -126,6 +136,20 @@ function App() {
       ...tasks,
       activeItem:item,
       editing: true,
+    })
+  }
+
+  function deleteTask(task){
+    const csrftoken = getCookie('csrftoken')
+
+    fetch(`http://127.0.0.1:8000/task-delete/${task.id}/`,{
+      method:'DELETE',
+      headers:{
+        'Content-type' : 'application/json',
+        'X-CSRFToken' : csrftoken,
+      },
+    }).then(response =>{
+      fetchTasks()
     })
   }
   return (
@@ -149,7 +173,7 @@ function App() {
               <div className={todo.completed? 'todo-row complete' : 'todo-row'} key={index}>
                 <EditRender todo={todo} editing={tasks.editing}/>
                 <div className='icons'>
-                  <FiXCircle className='remove-icon' color='red'/>
+                  <FiXCircle className='remove-icon' color='red' onClick={()=>deleteTask(todo)}/>
                   {tasks.editing && todo.id=== tasks.activeItem.id
                   ?<FiCheckCircle className='edit-icon' color='lime' onClick={handleSubmit}/>
                   :<FiEdit className='edit-icon' color='aqua' onClick={()=>StartEdit(todo)}/>}

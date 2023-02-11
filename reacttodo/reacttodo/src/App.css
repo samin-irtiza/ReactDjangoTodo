@@ -82,13 +82,20 @@ h1 {
 
 textarea{
   background-color:transparent;
-  border: 1px solid aqua;
-  border-radius: 4px;
+  border: 2px solid aqua;
+  border-radius: 5px;
   color: inherit;
-  height: auto;
+  min-height: 75px;
   resize: none;
   width: 100%;
+  box-shadow: 0px 0px 10px black;
 }
+
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 10px aqua;
+}
+
 .edit-form{
   flex-basis: 100%;
   padding: 16px;

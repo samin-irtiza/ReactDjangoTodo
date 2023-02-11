@@ -67,10 +67,30 @@ function App() {
 
     let url = 'http://127.0.0.1:8000/task-create/'
 
-    if (tasks.editing){
-      url = `http://127.0.0.1:8000/task-update/${tasks.activeItem.id}/`
-      setTasks({...tasks,editing:false})
-    }
+    fetch(url,{
+      method:'POST',
+      headers:{
+        'Content-type' : 'application/json',
+        'X-CSRFToken' : csrftoken,
+      },
+      body:JSON.stringify(tasks.activeItem)
+    }).then((response) => {
+      fetchTasks()
+      setTasks({
+        ...tasks,
+        activeItem:{
+          id: null,
+          title: '',
+          completed: false,
+        },
+      editing:false})
+    }).catch((error) => console.error('Error',error))
+  }
+  
+  function handleEdit(){
+    const csrftoken = getCookie('csrftoken');
+    
+    let url = `http://127.0.0.1:8000/task-update/${tasks.activeItem.id}/`
 
     fetch(url,{
       method:'POST',
@@ -88,10 +108,10 @@ function App() {
           title: '',
           completed: false,
         },
-      })
+      editing:false})
     }).catch((error) => console.error('Error',error))
   }
-  
+
   function EditRender(editprops){
     const todo = editprops.todo
     // const textAreaRef = useRef(null)
@@ -110,7 +130,12 @@ function App() {
     }
     if (editprops.editing && todo.id===tasks.activeItem.id){
         return (
-        <form className='edit-form' onSubmit={handleSubmit}>
+        <form className='edit-form' onKeyDown={(e)=>{
+          if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleEdit();
+          }
+        }}>
           <TextareaAutosize
             // ref={textAreaRef}
             type='text'
@@ -175,7 +200,7 @@ function App() {
                 <div className='icons'>
                   <FiXCircle className='remove-icon' color='red' onClick={()=>deleteTask(todo)}/>
                   {tasks.editing && todo.id=== tasks.activeItem.id
-                  ?<FiCheckCircle className='edit-icon' color='lime' onClick={handleSubmit}/>
+                  ?<FiCheckCircle className='edit-icon' color='lime' onClick={handleEdit}/>
                   :<FiEdit className='edit-icon' color='aqua' onClick={()=>StartEdit(todo)}/>}
                 </div>
               </div>

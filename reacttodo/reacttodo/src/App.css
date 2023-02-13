@@ -84,6 +84,7 @@ textarea{
   background-color:transparent;
   border: 2px solid aqua;
   border-radius: 5px;
+  padding: 5px;
   color: inherit;
   min-height: 75px;
   resize: none;

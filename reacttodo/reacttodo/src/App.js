@@ -1,11 +1,9 @@
 import './App.css';
 import React, {useState, useEffect, useRef} from 'react';
 // import {SlClose} from "react-icons/sl"
-import TextareaAutosize from 'react-textarea-autosize'
+import Task from './components/Task';
 
-import {FiXCircle} from "react-icons/fi"
-import {FiEdit} from "react-icons/fi"
-import {FiCheckCircle} from "react-icons/fi"
+
 function App() {
 
   const [tasks,setTasks] = useState({
@@ -87,10 +85,10 @@ function App() {
     }).catch((error) => console.error('Error',error))
   }
   
-  function handleEdit(){
+  function handleEdit(task){
     const csrftoken = getCookie('csrftoken');
     
-    let url = `http://127.0.0.1:8000/api/task-update/${tasks.activeItem.id}/`
+    let url = `http://127.0.0.1:8000/api/task-update/${task.id}/`
 
     fetch(url,{
       method:'POST',
@@ -98,7 +96,7 @@ function App() {
         'Content-type' : 'application/json',
         'X-CSRFToken' : csrftoken,
       },
-      body:JSON.stringify(tasks.activeItem)
+      body:JSON.stringify(task)
     }).then((response) => {
       fetchTasks()
       setTasks({
@@ -112,54 +110,19 @@ function App() {
     }).catch((error) => console.error('Error',error))
   }
 
-  function EditRender(editprops){
-    const todo = editprops.todo
-    // const textAreaRef = useRef(null)
-    const completeToggle = (e) =>{
-      tasks.todoList.map(t =>{
-        if (t.id===todo.id){
-          t.completed=!t.completed
-        }
-        return t
-      })
-      setTasks({...tasks})
-    }
-
-    const caretPositionFix = (e) => {
-      e.target.setSelectionRange(e.target.value.length, e.target.value.length);
-    }
-    if (editprops.editing && todo.id===tasks.activeItem.id){
-        return (
-        <form className='edit-form' onKeyDown={(e)=>{
-          if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleEdit();
-          }
-        }}>
-          <TextareaAutosize
-            // ref={textAreaRef}
-            type='text'
-            value={tasks.activeItem.title}
-            name='text'
-            onChange = {handleChange}
-            autoFocus = {true}
-            onFocus = {caretPositionFix}
-          />
-        </form>
-        )
-    }
-    return(
-        <div className='todo-text' onClick={completeToggle}>
-          {todo.title}
-        </div>
-    )
-
+  const completeToggle = (op) =>{
+    tasks.todoList.map(t =>{
+      if (t.id===op){
+        t.completed=!t.completed
+      }
+      return t
+    })
+    setTasks({...tasks})
   }
 
   function StartEdit(item){
     setTasks({
       ...tasks,
-      activeItem:item,
       editing: true,
     })
   }
@@ -194,18 +157,7 @@ function App() {
         </form>
       </div>
       <div className="list-wrapper">
-          {tasks.todoList.map((todo,index) => (
-              <div className={todo.completed? 'todo-row complete' : 'todo-row'} key={index}>
-                <EditRender todo={todo} editing={tasks.editing}/>
-                <div className='icons'>
-                  <FiXCircle className='remove-icon' color='red' onClick={()=>deleteTask(todo)}/>
-                  {tasks.editing && todo.id=== tasks.activeItem.id
-                  ?<FiCheckCircle className='edit-icon' color='lime' onClick={handleEdit}/>
-                  :<FiEdit className='edit-icon' color='aqua' onClick={()=>StartEdit(todo)}/>}
-                </div>
-              </div>
-            ))
-          }
+        <Task todos={tasks.todoList} completeToggle={completeToggle} deleteTask={deleteTask} StartEdit={StartEdit} handleEdit={handleEdit} />
       </div>
     </div>
   )

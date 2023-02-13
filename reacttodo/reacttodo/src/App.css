@@ -94,7 +94,7 @@ textarea{
 
 textarea:focus {
   outline: none;
-  box-shadow: 0 0 10px aqua;
+  box-shadow: 0 0 5px aqua;
 }
 
 .edit-form{

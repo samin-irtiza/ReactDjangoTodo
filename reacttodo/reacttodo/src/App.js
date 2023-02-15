@@ -44,7 +44,7 @@ function App() {
   function fetchTasks (){
     console.log("Fetching List of Tasks...")
     
-    fetch('http://127.0.0.1:8000/api/task-list/')
+    fetch('api/task-list/')
     .then(response => response.json())
     .then(data => setTasks(t=>t={...t,todoList:data}))
     // .then(()=>console.log(tasks.todoList))
@@ -63,7 +63,7 @@ function App() {
     
     const csrftoken = getCookie('csrftoken');
 
-    let url = 'http://127.0.0.1:8000/api/task-create/'
+    let url = 'api/task-create/'
 
     fetch(url,{
       method:'POST',
@@ -88,7 +88,7 @@ function App() {
   function handleEdit(task){
     const csrftoken = getCookie('csrftoken');
     
-    let url = `http://127.0.0.1:8000/api/task-update/${task.id}/`
+    let url = `api/task-update/${task.id}/`
 
     fetch(url,{
       method:'POST',
@@ -131,7 +131,7 @@ function App() {
   function deleteTask(task){
     const csrftoken = getCookie('csrftoken')
 
-    fetch(`http://127.0.0.1:8000/api/task-delete/${task.id}/`,{
+    fetch(`api/task-delete/${task.id}/`,{
       method:'DELETE',
       headers:{
         'Content-type' : 'application/json',

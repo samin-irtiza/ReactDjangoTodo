@@ -98,7 +98,7 @@ function App() {
       },
       body:JSON.stringify(task)
     }).then((response) => {
-      // fetchTasks()
+      fetchTasks()
       setTasks({
         ...tasks,
         activeItem : {

@@ -44,7 +44,7 @@ function App() {
   function fetchTasks (){
     console.log("Fetching List of Tasks...")
     
-    fetch('http://127.0.0.1:8000/api/task-list/')
+    fetch('api/task-list/')
     .then(response => response.json())
     .then(data => setTasks(t=>t={...t,todoList:data}))
     // .then(()=>console.log(tasks.todoList))
@@ -63,7 +63,7 @@ function App() {
     
     const csrftoken = getCookie('csrftoken');
 
-    let url = 'http://127.0.0.1:8000/api/task-create/'
+    let url = 'api/task-create/'
 
     fetch(url,{
       method:'POST',
@@ -74,21 +74,19 @@ function App() {
       body:JSON.stringify(tasks.activeItem)
     }).then((response) => {
       fetchTasks()
-      setTasks({
-        ...tasks,
-        activeItem:{
+      setTasks((t)=>{t.activeItem={
           id: null,
           title: '',
           completed: false,
         },
-      editing:false})
+      t.editing=false})
     }).catch((error) => console.error('Error',error))
   }
   
   function handleEdit(task){
     const csrftoken = getCookie('csrftoken');
     
-    let url = `http://127.0.0.1:8000/api/task-update/${task.id}/`
+    let url = `api/task-update/${task.id}/`
 
     fetch(url,{
       method:'POST',
@@ -111,13 +109,13 @@ function App() {
   }
 
   const completeToggle = (op) =>{
-    tasks.todoList.map(t =>{
+    const updatedList=tasks.todoList.map(t =>{
       if (t.id===op){
         t.completed=!t.completed
       }
       return t
     })
-    setTasks({...tasks})
+    setTasks(updatedList)
   }
 
   function StartEdit(item){
@@ -130,7 +128,7 @@ function App() {
   function deleteTask(task){
     const csrftoken = getCookie('csrftoken')
 
-    fetch(`http://127.0.0.1:8000/api/task-delete/${task.id}/`,{
+    fetch(`api/task-delete/${task.id}/`,{
       method:'DELETE',
       headers:{
         'Content-type' : 'application/json',

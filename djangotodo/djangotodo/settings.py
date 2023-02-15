@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-jsvqdrb2meod_$w!%d&8g$6e9_c2*pz7qb_#5kmo8k99fnglp#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 
 # Application definition
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'base',
-    'corsheaders',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +126,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS=[
     os.path.join(BASE_DIR,'reacttodo/build/static')
 ]
-
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

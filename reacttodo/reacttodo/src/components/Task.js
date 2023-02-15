@@ -8,7 +8,7 @@ export default function Task({todos,handleEdit,StartEdit,completeToggle,deleteTa
     const [edit,setEdit] = useState({
         id:null,
         title:'',
-        completed:false
+        complete:false
     })
     function handleChange(e){
         setEdit({
@@ -23,7 +23,7 @@ export default function Task({todos,handleEdit,StartEdit,completeToggle,deleteTa
 
     return(
        todos.map((todo,index)=>(
-        <div className={todo.completed? 'todo-row complete' : 'todo-row'} key={index}>
+        <div className={todo.complete? 'todo-row complete' : 'todo-row'} key={index}>
             {edit.id===todo.id?
             <form className='edit-form' key={index} onKeyDown={(e)=>{
               if (e.key === 'Enter' && !e.shiftKey) {
@@ -32,7 +32,7 @@ export default function Task({todos,handleEdit,StartEdit,completeToggle,deleteTa
                   setEdit({
                     id:null,
                     title:'',
-                    completed:false})
+                    complete:false})
             }}}>
               <TextareaAutosize
                 // ref={textAreaRef}
@@ -54,7 +54,7 @@ export default function Task({todos,handleEdit,StartEdit,completeToggle,deleteTa
             <FiCheckCircle className='edit-icon' color='lime' onClick={()=>{handleEdit(edit);setEdit({
                 id:null,
                 title:'',
-                completed:false
+                complete:false
             })}}/>
             :<FiEdit className='edit-icon' color='aqua' onClick={()=>{StartEdit(todo)
             setEdit(todo)}}/>}

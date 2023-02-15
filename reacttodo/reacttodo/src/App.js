@@ -10,7 +10,7 @@ function App() {
     todoList:[],
     activeItem:{id: null,
       title: '',
-      completed: false,
+      complete: false,
     },
     editing: false,
   })
@@ -79,7 +79,7 @@ function App() {
         activeItem:{
           id: null,
           title: '',
-          completed: false,
+          complete: false,
         },
       editing:false})
     }).catch((error) => console.error('Error',error))
@@ -98,13 +98,13 @@ function App() {
       },
       body:JSON.stringify(task)
     }).then((response) => {
-      fetchTasks()
+      // fetchTasks()
       setTasks({
         ...tasks,
-        activeItem:{
+        activeItem : {
           id: null,
           title: '',
-          completed: false,
+          complete: false,
         },
       editing:false})
     }).catch((error) => console.error('Error',error))
@@ -113,7 +113,8 @@ function App() {
   const completeToggle = (op) =>{
     tasks.todoList.map(t =>{
       if (t.id===op){
-        t.completed=!t.completed
+        t.complete=!t.complete
+        handleEdit(t)
       }
       return t
     })
